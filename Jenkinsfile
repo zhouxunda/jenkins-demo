@@ -22,7 +22,7 @@ node('jenkins-slave') {
     stage('Push') {
         echo "4.Push Docker Image Stage"
         withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-            sh "docker login -u ${dockerHubUser} -p ${dockerHubPassword}"
+            sh "docker login registry.ffcs.com -u ${dockerHubUser} -p ${dockerHubPassword}"
             sh "docker push registry.ffcs.com/microservice/jenkins-demo:${build_tag}"
         }
     }
