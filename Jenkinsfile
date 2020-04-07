@@ -9,6 +9,7 @@ node('haimaxy-jnlp') {
             if (env.BRANCH_NAME != 'master') {
                 build_tag = "${env.BRANCH_NAME}-${build_tag}"
             }
+            echo 'build_tag:${build_tag}'
         }
     }
     stage('Test') {
