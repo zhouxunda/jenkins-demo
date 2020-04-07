@@ -17,13 +17,13 @@ node('jenkins-slave') {
     }
     stage('Build') {
         echo "3.Build Docker Image Stage"
-        sh "docker build -t zhouxunda/jenkins-demo:${build_tag} ."
+        sh "docker build -t registry.ffcs.com/microservice/jenkins-demo:${build_tag} ."
     }
     stage('Push') {
         echo "4.Push Docker Image Stage"
         withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
             sh "docker login -u ${dockerHubUser} -p ${dockerHubPassword}"
-            sh "docker push zhouxunda/jenkins-demo:${build_tag}"
+            sh "docker push registry.ffcs.com/microservice/jenkins-demo:${build_tag}"
         }
     }
     stage('Deploy') {
@@ -33,6 +33,7 @@ node('jenkins-slave') {
         //}
         sh "sed -i 's/<BUILD_TAG>/${build_tag}/' k8s.yaml"
         sh "sed -i 's/<BRANCH_NAME>/${env.BRANCH_NAME}/' k8s.yaml"
+	sh "sed -i 's@cnych@registry.ffcs.com/microservice@' k8s.yaml"
         sh "kubectl apply -f k8s.yaml --record"
     }
 }
